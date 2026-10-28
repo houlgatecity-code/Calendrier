@@ -1,0 +1,39 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mon calendrier – un compteur</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#18243a;font-family:system-ui,Arial,sans-serif;padding:18px 12px}.wrap{max-width:540px;margin:auto}h1{text-align:center;font-size:1.5rem}.panel{background:white;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 3px 18px #15243a12}.stat{text-align:center}.stat .num{font-size:3rem;font-weight:800;color:#147b50}.muted{color:#657188;font-size:.88rem}.nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}.nav strong{text-transform:capitalize;text-align:center}.nav button,.action{border:1px solid #d6dfea;border-radius:10px;background:white;padding:10px 15px;font-size:1rem;cursor:pointer}.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.weekday{text-align:center;font-size:.85rem;color:#66758b;padding:8px 0}.day{border:0;border-radius:9px;aspect-ratio:1;min-height:36px;background:#edf1f7;color:#1b293d;font-size:1rem;cursor:pointer}.day.checked{background:#178557;color:white;font-weight:700}.day.today{outline:2px solid #5374e8;outline-offset:1px}.empty{min-height:36px}.actions{display:flex;gap:8px;flex-wrap:wrap}.hint{font-size:.85rem;color:#52627a;line-height:1.5}.warning{color:#9c4810;font-size:.85rem}button:focus-visible{outline:3px solid #5374e8;outline-offset:2px}
+</style></head><body><main class="wrap"><h1>📅 Mon calendrier</h1><section class="panel stat"><div class="muted">Dates cochées</div><div id="counter" class="num">0</div><div class="muted">1 date cochée = 1 point</div></section><section class="panel"><div class="nav"><button type="button" id="prev" aria-label="Mois précédent">❮</button><strong id="month">Octobre 2026</strong><button type="button" id="next" aria-label="Mois suivant">❯</button></div><div id="days" class="days">
+<div class="weekday">L</div><div class="weekday">M</div><div class="weekday">M</div><div class="weekday">J</div><div class="weekday">V</div><div class="weekday">S</div><div class="weekday">D</div>
+<div class="empty"></div><div class="empty"></div><div class="empty"></div>
+<button type="button" class="day" data-date="2026-10-01">1</button>
+<button type="button" class="day" data-date="2026-10-02">2</button>
+<button type="button" class="day" data-date="2026-10-03">3</button>
+<button type="button" class="day" data-date="2026-10-04">4</button>
+<button type="button" class="day" data-date="2026-10-05">5</button>
+<button type="button" class="day" data-date="2026-10-06">6</button>
+<button type="button" class="day" data-date="2026-10-07">7</button>
+<button type="button" class="day" data-date="2026-10-08">8</button>
+<button type="button" class="day" data-date="2026-10-09">9</button>
+<button type="button" class="day" data-date="2026-10-10">10</button>
+<button type="button" class="day" data-date="2026-10-11">11</button>
+<button type="button" class="day" data-date="2026-10-12">12</button>
+<button type="button" class="day" data-date="2026-10-13">13</button>
+<button type="button" class="day" data-date="2026-10-14">14</button>
+<button type="button" class="day" data-date="2026-10-15">15</button>
+<button type="button" class="day" data-date="2026-10-16">16</button>
+<button type="button" class="day" data-date="2026-10-17">17</button>
+<button type="button" class="day" data-date="2026-10-18">18</button>
+<button type="button" class="day" data-date="2026-10-19">19</button>
+<button type="button" class="day" data-date="2026-10-20">20</button>
+<button type="button" class="day" data-date="2026-10-21">21</button>
+<button type="button" class="day" data-date="2026-10-22">22</button>
+<button type="button" class="day" data-date="2026-10-23">23</button>
+<button type="button" class="day" data-date="2026-10-24">24</button>
+<button type="button" class="day" data-date="2026-10-25">25</button>
+<button type="button" class="day" data-date="2026-10-26">26</button>
+<button type="button" class="day" data-date="2026-10-27">27</button>
+<button type="button" class="day" data-date="2026-10-28">28</button>
+<button type="button" class="day" data-date="2026-10-29">29</button>
+<button type="button" class="day" data-date="2026-10-30">30</button>
+<button type="button" class="day" data-date="2026-10-31">31</button>
+</div></section><div class="actions"><button type="button" class="action" id="today">Aujourd'hui</button><button type="button" class="action" id="clear">Réinitialiser</button></div><p class="hint">Clique sur une date pour ajouter 1. Clique de nouveau pour retirer 1. Les dates sont sauvegardées dans ce navigateur.</p><p id="status" class="warning" hidden>Pour cliquer sur les dates, ouvre le fichier téléchargé dans Safari, Chrome ou Firefox plutôt que dans un aperçu de fichier.</p></main><script>
+(function(){'use strict';var key='calendrier-un-compteur-dates-v1',now=new Date(),year=now.getFullYear(),month=now.getMonth(),selected=[];try{var v=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(v))selected=v;}catch(e){}var el=function(id){return document.getElementById(id)},pad=function(n){return String(n).padStart(2,'0')},dateKey=function(y,m,d){return y+'-'+pad(m+1)+'-'+pad(d)};function save(){try{localStorage.setItem(key,JSON.stringify(selected))}catch(e){el('status').hidden=false;el('status').textContent='La sauvegarde est bloquée dans cet aperçu. Ouvre le fichier dans un navigateur.'}}function render(){el('counter').textContent=selected.length;el('month').textContent=new Date(year,month,1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'});var grid=el('days');grid.innerHTML='';['L','M','M','J','V','S','D'].forEach(function(x){var a=document.createElement('div');a.className='weekday';a.textContent=x;grid.appendChild(a)});var offset=(new Date(year,month,1).getDay()+6)%7;for(var i=0;i<offset;i++){var blank=document.createElement('div');blank.className='empty';grid.appendChild(blank)}var total=new Date(year,month+1,0).getDate();for(var d=1;d<=total;d++){var k=dateKey(year,month,d),b=document.createElement('button');b.type='button';b.textContent=d;b.dataset.date=k;b.className='day'+(selected.indexOf(k)>=0?' checked':'')+(k===dateKey(now.getFullYear(),now.getMonth(),now.getDate())?' today':'');b.setAttribute('aria-pressed',selected.indexOf(k)>=0?'true':'false');grid.appendChild(b)}}el('days').addEventListener('click',function(e){var b=e.target.closest('button[data-date]');if(!b)return;var k=b.dataset.date,i=selected.indexOf(k);if(i>=0)selected.splice(i,1);else selected.push(k);save();render()});el('prev').addEventListener('click',function(){month--;if(month<0){month=11;year--}render()});el('next').addEventListener('click',function(){month++;if(month>11){month=0;year++}render()});el('today').addEventListener('click',function(){var d=new Date();year=d.getFullYear();month=d.getMonth();render()});el('clear').addEventListener('click',function(){if(confirm('Effacer toutes les dates cochées ?')){selected=[];save();render()}});render()})();
+</script></body></html>
